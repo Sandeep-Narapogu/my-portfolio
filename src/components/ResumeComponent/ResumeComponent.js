@@ -1,81 +1,56 @@
-import React, { useEffect, useState } from "react"
-import ResumeDOC from "../../assets/resume/Sandeep_Narapogu.docx"
-import ResumePDF from "../../assets/resume/Sandeep_Narapogu.pdf"
+import React, { useState } from "react";
+
 const ResumeComponent = ({ resumeType }) => {
-    const [type, setType] = useState("")
-    const [filePath, setFilePath] = useState(null)
+  const [type, setType] = useState(resumeType || "pdf");
 
-    useEffect(() => {
-        setType(resumeType)
+  const getFile = () => {
+    return type === "docx"
+      ? process.env.PUBLIC_URL + "/resume.docx"
+      : process.env.PUBLIC_URL + "/resume.pdf";
+  };
 
-        if (resumeType === "docx") {
-            setFilePath(ResumeDOC)
-        } else {
-            setFilePath(ResumePDF)
-        }
-    }, [resumeType])
-    const onError = (e) => {
-        console.log(e, "error in file-viewer")
-    }
-    const showDOCX = () => {
-        setType("docx")
-        setFilePath(ResumeDOC)
-    }
+  const download = () => {
+    const link = document.createElement("a");
+    link.href = getFile();
+    link.download = type === "docx" ? "resume.docx" : "resume.pdf";
+    link.click();
+  };
 
-    const showPDF = () => {
-        setType("pdf")
-        setFilePath(ResumePDF)
-    }
+  return (
+    <div className="h-full w-full bg-white flex flex-col">
 
-    const download = () => {
-        // using Java Script method to get PDF file
-        fetch(filePath).then((response) => {
-            response.blob().then((blob) => {
-                // Creating new object of PDF file
-                const fileURL = window.URL.createObjectURL(blob)
-                // Setting various property values
-                let alink = document.createElement("a")
-                alink.href = fileURL
-                alink.download = `resume.${type}`
-                alink.click()
-            })
-        })
-    }
-    return (
-        <div className={`h-full w-full bg-white ${type === "docx" ? " text-black" : ""}`}>
-            <div className="flex text-black">
-                <button
-                    class="ml-2 mt-2 inline-flex items-center rounded bg-gray-300 py-2 px-4 font-bold text-gray-800 hover:bg-gray-400"
-                    onClick={showDOCX}
-                >
-                    DOCX
-                </button>
-                <button
-                    class="ml-2 mt-2 inline-flex items-center rounded bg-gray-300 py-2 px-4 font-bold text-gray-800 hover:bg-gray-400"
-                    onClick={showPDF}
-                >
-                    PDF
-                </button>
-                <button
-                    class="ml-2 mt-2 inline-flex items-center rounded bg-gray-300 py-2 px-4 font-bold text-gray-800 hover:bg-gray-400"
-                    onClick={download}
-                >
-                    <svg class="mr-2 h-4 w-4 fill-current" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
-                        <path d="M13 8V2H7v6H2l8 8 8-8h-5zM0 18h20v2H0v-2z" />
-                    </svg>
-                    <span>Download</span>
-                </button>
-            </div>
-            {type && filePath && <a
-  href="/Sandeep_Narapogu.pdf"
-  target="_blank"
-  rel="noreferrer"
-  className="bg-blue-500 text-white px-4 py-2 rounded inline-block"
->
-  View Resume
-</a>}
-        </div>
-    )
-}
+      {/* Top buttons */}
+      <div className="flex gap-2 p-2 text-black">
+        <button onClick={() => setType("docx")}>DOCX</button>
+        <button onClick={() => setType("pdf")}>PDF</button>
+        <button onClick={download}>Download</button>
+      </div>
 
-export default ResumeComponent
+      {/* Viewer */}
+      <div className="flex-1">
+        {type === "pdf" ? (
+          <iframe
+            src={getFile()}
+            width="100%"
+            height="100%"
+            title="PDF"
+          />
+        ) : (
+          <iframe
+            src={
+              "https://docs.google.com/gview?embedded=true&url=" +
+              window.location.origin +
+              process.env.PUBLIC_URL +
+              "/resume.docx"
+            }
+            width="100%"
+            height="100%"
+            title="DOC"
+          />
+        )}
+      </div>
+    </div>
+  );
+};
+
+export default ResumeComponent;
