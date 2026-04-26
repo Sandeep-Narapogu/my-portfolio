@@ -1,0 +1,41 @@
+@import "tailwindcss/base";
+@import "tailwindcss/components";
+@import "tailwindcss/utilities";
+@import "./assets/styles/datepicker.css";
+@import "./assets/styles/sidebar.css";
+@import "./assets/styles/slider.css";
+@import "./assets/styles/scrollbar.css";
+@import "./assets/styles/navbar.css";
+@import "./assets/styles/verticalScroll.css";
+/* carousel for mobile screens */
+
+
+/* pdf and word resume */
+#docx .document-container {
+    @apply w-full bg-inherit;
+}
+
+.pg-viewer {
+    @apply overflow-scroll;
+}
+.pdf-canvas canvas {
+    @apply w-full;
+}
+
+/* card icon in about page(Logo.js component) */
+.cardIcon:hover {
+    filter: brightness(1.5);
+}
+
+/* writing text vertically */
+.verticalText {
+    writing-mode: vertical-rl;
+    margin-left: auto;
+}
+
+/* ellipsis for text */
+.textEllipsis {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
